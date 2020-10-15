@@ -9,39 +9,80 @@ import java.sql.*;
 public abstract class menu {
 	
 	private static ResultSet row;
+	private static int maxRow = -1;
+
 
 	public static void menu() {
 		
-		row = Basedatos.getCurrent();
-		
 		try {
-			Scanner teclado = new Scanner(System.in);
-
-			int opcion;
+			Scanner entrada = new Scanner(System.in);
+			
+			row = Basedatos.getCurrent();
+			maxRow = Basedatos.getMaxRow();
+			
+			String opcion = "";
+			
+			Boolean salir = false;
+			Boolean error = false;
+			
 		    do {
-		    	
-		    	System.out.println("[" + Basedatos.getRow() + "]");
-		    	System.out.println("[" + row.getString("DNI") + "]");
-		    	System.out.println("[" + row.getString("APELLIDO") + "]");
-		    	System.out.println("[" + row.getString("CP") + "]");
+				row.next();
+				
+		    	System.out.println("[" + (Basedatos.getRow() + 1) + "]");
+		    	System.out.println("[DNI: " + row.getString("DNI") + "]");
+		    	System.out.println("[Apellido: " + row.getString("APELLIDOS") + "]");
+		    	System.out.println("[CP: " + row.getString("CP") + "]");
 		
-		        opcion = teclado.nextInt();
-		        teclado.nextLine();
+		        opcion = entrada.nextLine().toLowerCase();
 		
-		        switch (opcion) {
-		            case 1:
-		                System.out.println("");
+		        switch (opcion.charAt(0)) {
+		            case 'k':
+		            	if(Basedatos.getRow() == (maxRow-1)) {
+		            		System.out.println("Error: Estas en la última fila");
+		            		error = true;
+		            	}else
+		            		row = Basedatos.getNext();
 		                break;
-		            case 0:
-		                System.out.println("HASTA LA PROXIMA AMIGO");
+		            case 'd':
+		            	if(Basedatos.getRow() == 0) {
+		            		System.out.println("Error: Estas en la primera fila");
+		            		error = true;
+		            	}else
+		            		row = Basedatos.getLast();
 		                break;
+		            case '.':
+		            	salir = true;
+		            	break;
 		            default:
-		                System.out.println("!- OPCION INCORRECTA -¡");
+		                try {
+		                	int number = Integer.parseInt(opcion)-1;
+		                	
+		                	if(number== 1) {
+		                		System.out.println("Error: Esa es una fila incorrecta");
+		                		error = true;
+		                	}else if(number >= maxRow) {
+		                		System.out.println("Error: Esa es una fila incorrecta");
+		                		error = true;
+		                	}else
+		                		row = Basedatos.getRow(number);
+		                }catch(NumberFormatException e) {
+		                	System.out.println("No se ha introducido un número correcto.");
+		                	error = true;
+		                }
 		                break;
 		        }
-		    } while (opcion != 0);
+		        
+		        if(error) {
+		        	error = false;
+		        	row = Basedatos.getCurrent();
+		        }
+		        
+		    } while (!salir);
+		    
+		    entrada.close();
+		    Basedatos.close();
+		    
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 		
 	}
