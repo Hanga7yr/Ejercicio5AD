@@ -2,16 +2,28 @@ package menu;
 
 import java.util.Scanner;
 
+import basedatos.Basedatos;
+
+import java.sql.*;
 
 public abstract class menu {
+	
+	private static ResultSet row;
 
 	public static void menu() {
+		
+		row = Basedatos.getCurrent();
+		
 		try {
 			Scanner teclado = new Scanner(System.in);
 
 			int opcion;
 		    do {
-		        System.out.println("");
+		    	
+		    	System.out.println("[" + Basedatos.getRow() + "]");
+		    	System.out.println("[" + row.getString("DNI") + "]");
+		    	System.out.println("[" + row.getString("APELLIDO") + "]");
+		    	System.out.println("[" + row.getString("CP") + "]");
 		
 		        opcion = teclado.nextInt();
 		        teclado.nextLine();

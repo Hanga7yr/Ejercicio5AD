@@ -11,9 +11,12 @@ public abstract class Basedatos {
 	private static ResultSet currentData;
 	
 	static{
-		String url = "jdbc:mysql://locahost:3306/" + basedatos;
-		try {						connection = DriverManager.getConnection(url, "root", "");	}
-		catch (SQLException e) {	error(e);													}
+		String randomGarbage = "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		String url = "jdbc:mysql://localhost:3306/" + basedatos + randomGarbage;
+		try {
+			connection = DriverManager.getConnection(url, "root", "");
+			currentData = getRow(currentRow);
+		}catch (SQLException e) {	error(e); }
 	}
 	
 	private static void error(SQLException e) {
@@ -62,4 +65,6 @@ public abstract class Basedatos {
 		
 		return Basedatos.currentData;
 	}
+
+	public static int getRow() { return currentRow;}
 }

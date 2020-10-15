@@ -1,10 +1,11 @@
 package main;
 
+import menu.menu;
+
 public class Main {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		menu.menu();
 	}
 
 }
