@@ -57,7 +57,7 @@ public abstract class menu {
 		                try {
 		                	int number = Integer.parseInt(opcion)-1;
 		                	
-		                	if(number== 1) {
+		                	if(number <= 0) {
 		                		System.out.println("Error: Esa es una fila incorrecta");
 		                		error = true;
 		                	}else if(number >= maxRow) {
