@@ -34,6 +34,9 @@ public abstract class menu {
 		    	System.out.println("[CP: " + row.getString("CP") + "]");
 		
 		        opcion = entrada.nextLine().toLowerCase();
+		        
+		        if(opcion.length() == 0)
+		        	opcion = " ";
 		
 		        switch (opcion.charAt(0)) {
 		            case 'k':
@@ -83,6 +86,7 @@ public abstract class menu {
 		    Basedatos.close();
 		    
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
