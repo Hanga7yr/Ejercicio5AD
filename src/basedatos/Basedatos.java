@@ -2,10 +2,64 @@ package basedatos;
 import java.sql.*;
 
 public abstract class Basedatos {
+	
+	private static Connection connection;
+	private static String basedatos = "prueba";
+	
+	private static int currentRow = 0;
+	
+	private static ResultSet currentData;
+	
+	static{
+		String url = "jdbc:mysql://locahost:3306/" + basedatos;
+		try {						connection = DriverManager.getConnection(url, "root", "");	}
+		catch (SQLException e) {	error(e);													}
+	}
+	
+	private static void error(SQLException e) {
+		System.out.println("SQL mensaje: " + e.getMessage());
+      	System.out.println("SQL Estado: " + e.getSQLState());
+      	System.out.println("SQL codigo especifico: " + e.getErrorCode());
+	}
+	
 	//Function to get the next row of the table
-	public static ResultSet getNext() { return null;}
+	public static ResultSet getNext() {
+		try {
+			Statement stm = connection.createStatement();
+		
+			currentData = stm.executeQuery("SELECT * FROM clientes LIMIT " + ++currentRow + ", 1");
+		} catch(SQLException e) {
+			error(e);
+		}
+		
+		return Basedatos.currentData;
+	}
+	
+	public static ResultSet getCurrent() {return Basedatos.currentData;}
 	//Function to get the last row of the table
-	public static ResultSet getLast() { return null;}
+	public static ResultSet getLast() { 
+		try {
+			Statement stm = connection.createStatement();
+		
+			currentData = stm.executeQuery("SELECT * FROM clientes LIMIT " + --currentRow + ", 1");
+		} catch(SQLException e) {
+			error(e);
+		}
+		
+		return Basedatos.currentData;
+	}
 	//Function to get a determined row
-	public static ResultSet getRow(int i) { return null;}
+	public static ResultSet getRow(int i) {
+		try {
+			
+			currentRow = i;
+			Statement stm = connection.createStatement();
+		
+			currentData = stm.executeQuery("SELECT * FROM clientes LIMIT " + currentRow + ", 1");
+		} catch(SQLException e) {
+			error(e);
+		}
+		
+		return Basedatos.currentData;
+	}
 }
