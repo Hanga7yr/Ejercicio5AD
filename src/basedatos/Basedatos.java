@@ -15,7 +15,7 @@ public abstract class Basedatos {
 		String url = "jdbc:mysql://localhost:3306/" + basedatos + randomGarbage;
 		try {
 			connection = DriverManager.getConnection(url, "root", "");
-			currentData = getRow(currentRow);
+			Basedatos.currentData = getRow(currentRow);
 		}catch (SQLException e) {	error(e); }
 	}
 	
@@ -38,10 +38,11 @@ public abstract class Basedatos {
 		return Basedatos.currentData;
 	}
 	
-	public static ResultSet getCurrent() {return Basedatos.currentData;}
+	public static ResultSet getCurrent() {return getRow(currentRow);}
 	//Function to get the last row of the table
 	public static ResultSet getLast() { 
 		try {
+			
 			Statement stm = connection.createStatement();
 		
 			currentData = stm.executeQuery("SELECT * FROM clientes LIMIT " + --currentRow + ", 1");
@@ -58,7 +59,8 @@ public abstract class Basedatos {
 			currentRow = i;
 			Statement stm = connection.createStatement();
 		
-			currentData = stm.executeQuery("SELECT * FROM clientes LIMIT " + currentRow + ", 1");
+			Basedatos.currentData = stm.executeQuery("SELECT * FROM clientes LIMIT " + currentRow + ", 1");
+			
 		} catch(SQLException e) {
 			error(e);
 		}
@@ -67,4 +69,29 @@ public abstract class Basedatos {
 	}
 
 	public static int getRow() { return currentRow;}
+	public static int getMaxRow() {
+		int result = -1;
+		
+		try {
+			Statement stm = connection.createStatement();
+			
+			currentData = stm.executeQuery("SELECT COUNT(DNI) AS count FROM clientes");
+			currentData.next();
+			
+			result = currentData.getInt("count");
+		} catch(SQLException e) {
+			error(e);
+		}
+		
+		return result;
+	}
+	
+	public static void close() {
+		try {
+			connection.close();
+			currentData.close();
+		} catch (SQLException e) {
+			error(e);
+		}
+	}
 }

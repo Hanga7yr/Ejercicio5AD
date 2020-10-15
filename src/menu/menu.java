@@ -11,8 +11,8 @@ public abstract class menu {
 	private static ResultSet row;
 	private static int maxRow = -1;
 
+	public static void init() {
 
-	public static void menu() {
 		
 		try {
 			Scanner entrada = new Scanner(System.in);
@@ -84,7 +84,5 @@ public abstract class menu {
 		    
 		} catch (Exception e) {
 		}
-		
 	}
-	
 }
